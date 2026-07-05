@@ -32,9 +32,10 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleUnexpected(Exception exception) {
-        return build("Something went wrong. Please try again.", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+public ResponseEntity<ErrorResponse> handleUnexpected(Exception exception) {
+    exception.printStackTrace();   // Prints the full stack trace to Railway logs
+    return build(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+}
 
     private ResponseEntity<ErrorResponse> build(String message, HttpStatus status) {
         return ResponseEntity.status(status).body(new ErrorResponse(message, status.value(), LocalDateTime.now()));
