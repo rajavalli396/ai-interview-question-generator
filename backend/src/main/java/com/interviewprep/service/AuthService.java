@@ -36,20 +36,32 @@ public class AuthService {
     }
 
     @Transactional
-    public AuthResponse register(RegisterRequest request) {
-        String email = request.email().trim().toLowerCase();
-        if (userRepository.existsByEmail(email)) {
-            throw new ApiException("An account already exists with this email.", HttpStatus.CONFLICT);
-        }
+public AuthResponse register(RegisterRequest request) {
+    System.out.println("STEP 1");
 
-        User user = new User();
-        user.setName(request.name().trim());
-        user.setEmail(email);
-        user.setPassword(passwordEncoder.encode(request.password()));
-        User savedUser = userRepository.save(user);
-        return toAuthResponse(savedUser);
+    String email = request.email().trim().toLowerCase();
+
+    System.out.println("STEP 2");
+
+    if (userRepository.existsByEmail(email)) {
+        throw new ApiException("An account already exists with this email.", HttpStatus.CONFLICT);
     }
 
+    System.out.println("STEP 3");
+
+    User user = new User();
+    user.setName(request.name().trim());
+    user.setEmail(email);
+    user.setPassword(passwordEncoder.encode(request.password()));
+
+    System.out.println("STEP 4");
+
+    User savedUser = userRepository.save(user);
+
+    System.out.println("STEP 5");
+
+    return toAuthResponse(savedUser);
+}
     public AuthResponse login(LoginRequest request) {
         String email = request.email().trim().toLowerCase();
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, request.password()));
